@@ -83,4 +83,51 @@ let replicate lst n =
   aux n lst;;
 
 replicate ["a"; "b"; "c"] 3;;
-  
+
+
+let drop lst n = 
+  let rec aux rep acc = function
+  | [] -> acc
+  | h :: t -> if rep = 0 then aux (n - 1) acc t else aux (rep - 1) (acc @ [h]) t in
+  aux (n - 1) [] lst;;
+
+drop ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j"] 3;;
+
+
+type 'a binary_tree =
+  | Empty
+  | Node of 'a * 'a binary_tree * 'a binary_tree;;
+
+let rec insert tree x = match tree with 
+| Empty -> Node (x, Empty, Empty)
+| Node (y, l, r) -> if y = x then tree
+                  else if y < x then  Node (y, insert l x, r)
+                  else Node (y, l, insert r x);;
+
+let construct lst = List.fold_left insert Empty lst;;
+
+construct [5; 3; 18; 1; 4; 12; 21];;
+
+let rec is_mirror lft rght = 
+match lft, rght with
+| Empty, Empty -> true
+| Node(_, l1, r1), Node(_, l2, r2) -> is_mirror l1 l2 && is_mirror r1 r2
+| _ -> false;;
+
+let is_symmetric = function
+| Empty -> true
+| Node(_, l, r) -> is_mirror l r;;
+
+is_symmetric (construct [5; 3; 18; 1; 4; 12; 21]);;
+not (is_symmetric (construct [3; 2; 5; 7; 4]));;
+
+let rec count_leaves = function
+| Empty -> 0
+| Node(_, Empty, Empty) -> 1
+| Node(_, l, r) -> count_leaves l + count_leaves r;;
+
+count_leaves Empty;;
+count_leaves (construct [5; 3; 18; 1; 4; 12; 21]);;
+
+
+
